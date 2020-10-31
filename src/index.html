@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<title>windows31</title>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+<script language="JavaScript" type="text/javascript">
+  require("./src/loader.js");
+</script>
+<link rel="stylesheet" href="src/windows31.css">
+</head>
+<body>
+<div id="root">
+<div>
+    <div id="boot_options">
+        <h4>Quick Start</h4>
+        <input type="button" value="windows31" id="start_windows31">
+        <br>
+
+        <br>
+        <hr>
+
+        <table>
+            <tr style="display: none;">
+                <td width="250">CD image</td>
+                <td>
+                    <input type="file" id="cd_image">
+                </td>
+            </tr>
+
+            <tr>
+                <td>Floppy disk image</td>
+                <td> <input type="file" id="floppy_image"><br></td>
+            </tr>
+
+            <tr>
+                <td>Hard drive disk image</td>
+                <td><input type="file" id="hd_image"><br></td>
+            </tr>
+
+            <tr style="display: none;">
+                <td>Multiboot kernel image</td>
+                <td><input type="file" id="multiboot_image"><br></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><hr></td>
+            </tr>
+
+            <tr style="display: none;">
+                <td>Memory size</td>
+                <td>
+                    <input id="memory_size" type="number" value="32" min="16" max="2048" step="16"> MB<br>
+                </td>
+            </tr>
+
+            <tr style="display: none;">
+                <td>Video Memory size</td>
+                <td>
+                    <input id="video_memory_size" type="number" value="4" min="1" max="128" step="1"> MB<br>
+                </td>
+            </tr>
+            <tr>
+                <td>Boot order</td>
+                <td>
+                    <select id="boot_order">
+                        <option value="213">CD / Floppy / Hard Disk</option>
+                        <option value="123">CD / Hard Disk / Floppy</option>
+                        <option value="231">Floppy / CD / Hard Disk</option>
+                        <option value="321">Floppy / Hard Disk / CD</option>
+                        <option value="312">Hard Disk / Floppy / CD</option>
+                        <option value="132">Hard Disk / CD / Floppy</option>
+                    </select>
+                 </td>
+            </tr>
+        </table>
+
+        <br>
+        <button id="start_emulation">Start Emulation</button>
+		<br>
+        <br>
+    </div>
+
+    <div id="runtime_options" style="display: none">
+        <input type="button" value="Send Ctrl-Alt-Del" id="ctrlaltdel">
+        <input type="button" value="Send Alt-Tab" id="alttab">
+        <input type="button" value="Get floppy image" id="get_fda_image">
+        <input type="button" value="Get second floppy image" id="get_fdb_image">
+        <input type="button" value="Get hard disk image" id="get_hda_image">
+        <input type="button" value="Get second hard disk image" id="get_hdb_image">
+        <input type="button" value="Get cdrom image" id="get_cdrom_image">
+        <input type="button" value="Save State" id="save_state">
+        <input type="button" value="Load State" id="load_state"> <input type="file" style="display: none" id="load_state_input">
+        <input type="button" value="Disable mouse" id="toggle_mouse">
+        <input type="button" value="Take screenshot (only graphic modes)" id="take_screenshot">
+
+        <label>
+            Scale:
+            <input type="number" min="0.25" step="0.25" value="1.0" id="scale" style="width: 50px">
+        </label>
+
+    </div>
+
+    <pre style="margin: 0" id="log_levels"></pre>
+    <pre style="margin: 3px 0px 0px 0px" id="debug_infos"></pre>
+
+    <pre style="display: none" id="loading">
+        <div id="load_screen">
+          <div class="ring"></div>
+    	</div>
+    </pre>
+
+    <br>
+</div>
+
+<div id="screen_container" style="display: none">
+    <div id="screen"></div>
+    <canvas id="vga"></canvas>
+    <img src="src/boot.png" id="startup_screen" style="display: none;">
+
+    <div style="position: absolute; top: 0; z-index: 10">
+        <textarea class="phone_keyboard"></textarea>
+    </div>
+</div>
+
+<div id="debug_panel" style="display: none">
+</div>
+
+<br style="clear:both"><br>
+
+<textarea readonly id="log" style="display:none"></textarea>
+
+<textarea spellcheck="false" cols="40" rows="12" id="serial" style="display:none">
+</textarea>
+</div>
+<script language="JavaScript" type="text/javascript">
+const customTitlebar = require('custom-electron-titlebar');
+const electron = require('electron');
+
+const newCustomTitlebar=new customTitlebar.Titlebar({
+	backgroundColor: customTitlebar.Color.fromHex('#438686'),
+	//backgroundColor: customTitlebar.Color.TRANSPARENT,
+	menuPosition: 'bottom',
+	enableMnemonics: true,
+	shadow: true,
+	icon: '/src/icon.ico',
+	titleHorizontalAlignment: 'left',
+	unfocusEffect: true
+});
+</script>
+</body>
+</html>
