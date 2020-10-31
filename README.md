@@ -4,7 +4,7 @@ Windows 3.1, running in an [Electron](https://electronjs.org/) app.
 * English
 * Russian
 # Downloads
-|  | Windows | macOS | Linux |
+|  | Windows |||
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Standalone Download | 📦[Standalone, 32-bit](https://github.com/felixrieseberg/windows95/releases/download/v2.2.2/windows95-win32-ia32-2.2.2.zip)  |  |  |
 | Installer | 💽[Setup, 64-bit](https://github.com/felixrieseberg/windows95/releases/download/v2.2.2/windows95-2.2.2-setup-x64.exe) <br /> 💽[Setup, 32-bit](https://github.com/felixrieseberg/windows95/releases/download/v2.2.2/windows95-2.2.2-setup-ia32.exe)  |  |  |
