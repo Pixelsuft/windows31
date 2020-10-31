@@ -4,12 +4,13 @@ Windows 3.1, running in an [Electron](https://electronjs.org/) app.
 * English
 * Russian
 # Downloads
-`English`
+* English <br />
 | Type / OS | Windows |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Zip | 📦[Standalone, Zip, En, 32-bit](https://github.com/felixrieseberg/windows95/releases/download/v2.2.2/windows95-win32-ia32-2.2.2.zip)  |
 | Setup | 💽[Setup, Exe, En, 32-bit](https://github.com/felixrieseberg/windows95/releases/download/v2.2.2/windows95-2.2.2-setup-ia32.exe)  |
-`Russian`
+<br />
+* Russian <br />
 | Type / OS | Windows |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Zip | 📦[Standalone, Zip, Rus, 32-bit](https://github.com/felixrieseberg/windows95/releases/download/v2.2.2/windows95-win32-ia32-2.2.2.zip)  |
