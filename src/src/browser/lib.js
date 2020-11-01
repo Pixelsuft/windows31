@@ -218,9 +218,9 @@ var ASYNC_SAFE = false;
         {
             if(error)
             {
-                console.assert(false,
-                    "Cannot use: " + this.filename + ". " +
-                    "`Range: bytes=...` header not supported (Got `" + error.header + "`)");
+                //console.assert(false,
+                  //  "Cannot use: " + this.filename + ". " +
+                   // "`Range: bytes=...` header not supported (Got `" + error.header + "`)");
             }
             else
             {
@@ -273,10 +273,10 @@ var ASYNC_SAFE = false;
      */
     AsyncXHRBuffer.prototype.get = function(offset, len, fn)
     {
-        console.assert(offset + len <= this.byteLength);
-        console.assert(offset % this.block_size === 0);
-        console.assert(len % this.block_size === 0);
-        console.assert(len);
+        //console.assert(offset + len <= this.byteLength);
+        //console.assert(offset % this.block_size === 0);
+        //console.assert(len % this.block_size === 0);
+        //console.assert(len);
 
         var block = this.get_from_cache(offset, len, fn);
         if(block)
@@ -314,13 +314,13 @@ var ASYNC_SAFE = false;
      */
     AsyncXHRBuffer.prototype.set = function(start, data, fn)
     {
-        console.assert(start + data.byteLength <= this.byteLength);
+        //console.assert(start + data.byteLength <= this.byteLength);
 
         var len = data.length;
 
-        console.assert(start % this.block_size === 0);
-        console.assert(len % this.block_size === 0);
-        console.assert(len);
+        //console.assert(start % this.block_size === 0);
+        //console.assert(len % this.block_size === 0);
+        //console.assert(len);
 
         var start_block = start / this.block_size;
         var block_count = len / this.block_size;
@@ -337,7 +337,7 @@ var ASYNC_SAFE = false;
             var data_slice = data.subarray(i * this.block_size, (i + 1) * this.block_size);
             block.set(data_slice);
 
-            console.assert(block.byteLength === data_slice.length);
+            //console.assert(block.byteLength === data_slice.length);
         }
 
         fn();
@@ -535,9 +535,9 @@ var ASYNC_SAFE = false;
      */
     AsyncFileBuffer.prototype.get = function(offset, len, fn)
     {
-        console.assert(offset % this.block_size === 0);
-        console.assert(len % this.block_size === 0);
-        console.assert(len);
+        //console.assert(offset % this.block_size === 0);
+        //console.assert(len % this.block_size === 0);
+        //console.assert(len);
 
         var block = this.get_from_cache(offset, len, fn);
         if(block)

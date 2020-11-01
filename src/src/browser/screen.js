@@ -73,14 +73,35 @@ function ScreenAdapter(screen_container, bus)
 
         return "#" + Array(7 - n.length).join("0") + n;
     }
-
-
+	
+	var ml=0;
+	var mt=0;
+	
+    var enable_screen=true;
+	
+	function resizer_sc()
+	{
+		if(document.getElementById('screen_container').style.display=="block"){
+			ml=innerWidth/2-document.getElementById('vga').width/2;
+			mt=innerHeight/2-30-document.getElementById('vga').height/2;
+			if(ml<0)ml=0;
+			if(mt<0)mt=0;
+			document.getElementById('screen_container').style.marginLeft=ml+"px";
+			document.getElementById('screen_container').style.marginTop=mt+"px";
+		}
+		else{
+			if(enable_screen==true){
+				document.getElementById('screen_container').style.marginLeft="0px";
+				document.getElementById('screen_container').style.marginTop="0px";
+			}
+		}
+	}
+	window.addEventListener("resize", resizer_sc);
     /**
      * Charmaps that containt unicode sequences for the default dospage
      * @const
      */
 
-    var enable_screen=true;
 
     var charmap_high = new Uint16Array([
         0xC7, 0xFC, 0xE9, 0xE2, 0xE4, 0xE0, 0xE5, 0xE7,
@@ -260,6 +281,7 @@ function ScreenAdapter(screen_container, bus)
             graphic_screen.style.display = "none";
             enable_screen=true;
         }
+		resizer_sc();
     };
 
     this.clear_screen = function()
@@ -334,6 +356,7 @@ function ScreenAdapter(screen_container, bus)
 
         this.bus.send("screen-tell-buffer", [graphic_buffer32], [graphic_buffer32.buffer]);
         update_scale_graphic();
+		resizer_sc();
     };
 
     this.set_scale = function(s_x, s_y)
@@ -343,17 +366,20 @@ function ScreenAdapter(screen_container, bus)
 
         update_scale_text();
         update_scale_graphic();
+		resizer_sc();
     };
     this.set_scale(scale_x, scale_y);
 
     function update_scale_text()
     {
         elem_set_scale(text_screen, scale_x, scale_y, true);
+		resizer_sc();
     }
 
     function update_scale_graphic()
     {
         elem_set_scale(graphic_screen, scale_x, scale_y, false);
+		resizer_sc();
     }
 
     function elem_set_scale(elem, scale_x, scale_y, use_scale)
@@ -412,6 +438,7 @@ function ScreenAdapter(screen_container, bus)
         {
             elem.style.height = rectangle.height * scale_y + "px";
         }
+		resizer_sc();
     }
 
     this.update_cursor_scanline = function(start, end)
@@ -490,12 +517,22 @@ function ScreenAdapter(screen_container, bus)
             }
             if(text=="Starting Windows 3.1...                                                         "){
                 text="";
+                const electron=require("electron");
+                electron.ipcRenderer.send('in-started');
                 if(enable_screen==true){
                   text_screen.style.display="none";
                   document.getElementById("startup_screen").style="display: block;";
                   enable_screen=false;
                 }
             }
+            else if(text=="SeaBIOS (version rel-1.10.0-39-g3fdabae-dirty-20170530_144256-nyu)              " || text=="Press F12 for boot menu.                                                        ")
+			{
+				electron.ipcRenderer.send('in-started');
+				if(enable_screen==true){
+					document.getElementById('screen_container').style.marginLeft="0px";
+					document.getElementById('screen_container').style.marginTop="0px";
+				}
+			}
             color_element.textContent = text;
             fragment.appendChild(color_element);
         }

@@ -87,6 +87,12 @@ margin-top:0px;
     font-weight: bold;
     font-size: 15px;
     line-height: normal;
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 #screen, #vga {
     -webkit-transform-origin: top left;
@@ -140,11 +146,12 @@ h4 {
     padding: 8px 18px;
 }
 #screen_container {
-    float: left;
+    /*float: left;
     margin-right: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 10px;*/
     border: 1px solid #555;
     border-width: 2px 1px;
+	position: fixed;
 }
 a img {
     margin: 10px;

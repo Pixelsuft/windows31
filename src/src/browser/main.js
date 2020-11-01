@@ -18,13 +18,20 @@
 
     var alt=false;
 
+    var settings = {};
+
     var mouse_locked=false;
     /**
      * @return {Object.<string, string>}
      */
 
-     var in_loading=0;
+    var in_loading=0;
 
+    var zoom_factor=1;
+	
+	var ml=0;
+	var mt=0;
+	
     const customTitlebar = require('custom-electron-titlebar');
     const electron = require('electron');
 
@@ -39,7 +46,8 @@
             var param = query[i].split("=");
             parameters[param[0]] = decodeURIComponent(param[1]);
         }
-
+        //parameters.hda.url="src/windows31.img";
+        //parameters.hda.size="419070976";
         return parameters;
     }
 
@@ -54,7 +62,18 @@
 
         return result;
     }
-
+    document.getElementById("change_bios").onclick=function(){
+      if(document.getElementById("change_bios").value=='Using Sea BIOS')
+      {
+        document.getElementById("change_bios").value="Using Bochs BIOS";
+        settings.use_bochs_bios = true;
+      }
+      else
+      {
+        document.getElementById("change_bios").value="Using Sea BIOS";
+        settings.use_bochs_bios = false;
+      }
+    };
     var progress_ticks = 0;
 
     function show_progress(e)
@@ -95,9 +114,21 @@
                   "because it doesn't have XMLHttpRequest.responseType");
             return;
         }
+		electron.ipcRenderer.on('start-emulation',function(){
+            $("boot_options").style.display = "none";
+            set_profile("custom");
 
-        var settings = {};
+            var images = [];
+            var last_file;
 
+            var floppy_file = $("floppy_image").files[0];
+            if(floppy_file)
+            {
+                last_file = floppy_file;
+                settings.fda = { buffer: floppy_file };
+            }
+            start_emulation(settings);
+		});
         $("start_emulation").onclick = function()
         {
             $("boot_options").style.display = "none";
@@ -113,7 +144,7 @@
                 settings.fda = { buffer: floppy_file };
             }
 
-            var hd_file = $("hd_image").files[0];
+            /*var hd_file = $("hd_image").files[0];
             if(hd_file)
             {
                 last_file = hd_file;
@@ -128,11 +159,11 @@
                     last_file = multiboot_file;
                     settings.multiboot = { buffer: multiboot_file };
                 }
-            }
+            }*/
 
             start_emulation(settings);
         };
-        var oses = [
+      /*  var oses = [
             {
                 id: "windows31",
                 hda: {
@@ -142,7 +173,7 @@
                 boot_order: 0x312,
                 name: "windows31",
             }
-        ];
+        ];*/
 
         var query_args = get_query_arguments();
         var profile = query_args["profile"];
@@ -152,7 +183,7 @@
             settings.use_bochs_bios = true;
         }
 
-        for(var i = 0; i < oses.length; i++)
+        /*for(var i = 0; i < oses.length; i++)
         {
             var infos = oses[i];
 
@@ -176,19 +207,14 @@
                     start_profile(infos);
                 }.bind(this, infos, element);
             }
-        }
-
-        if(profile === "custom")
+        }*/
+        settings.hda = {
+            "size": 419070976,
+            "url": "src/windows31.img",
+            "async": true,
+        };
+        if(profile === "custom" || profile==="windows31")
         {
-            if(query_args["hda.url"])
-            {
-                settings.hda = {
-                    "size": parseInt(query_args["hda.size"], 10) || undefined,
-                    "url": query_args["hda.url"],
-                    "async": true,
-                };
-            }
-
             if(query_args["fda.url"])
             {
                 settings.fda = {
@@ -198,12 +224,12 @@
                 };
             }
 
-            if(settings.fda || settings.hda)
-            {
+            //if(settings.fda || settings.hda)
+          //  {
                 $("boot_options").style.display = "none";
 
                 start_emulation(settings, done);
-            }
+          //  }
         }
 
         function start_profile(infos)
@@ -232,7 +258,9 @@
             {
                 settings.boot_order = infos.boot_order;
             }
-
+			
+			resizer();
+			
             start_emulation(settings, done);
         }
 
@@ -392,8 +420,8 @@
     {
         $("boot_options").style.display = "none";
         $("loading").style.display = "none";
-        $("runtime_options").style.display = "block";
         $("screen_container").style.display = "block";
+        electron.ipcRenderer.send('in-started');
 
         electron.ipcRenderer.on('pause',function(){
             if(emulator.is_running())
@@ -424,11 +452,11 @@
 
         var mouse_is_enabled = false;
 
-        function toggle_mouse()
+        /*function toggle_mouse()
         {
             mouse_is_enabled = !mouse_is_enabled;
             emulator.mouse_set_status(mouse_is_enabled);
-        };
+        };*/
 
         var last_tick = 0;
         var running_time = 0;
@@ -455,7 +483,23 @@
 
             if(title_bar.innerText!=="windows31 (Stopped)")title_bar.innerText = "windows31 (Speed: " + (last_ips / delta_time | 0) + " kIPS, AVG Speed: " + (instruction_counter / running_time | 0) + " kIPS)";
         }
-
+		
+		function resizer()
+		{
+			if(document.getElementById('screen_container').style.display=="block"){
+				ml=innerWidth/2-document.getElementById('vga').width/2;
+				mt=innerHeight/2-30-document.getElementById('vga').height/2;
+				if(ml<0)ml=0;
+				if(mt<0)mt=0;
+				document.getElementById('screen_container').style.marginLeft=ml+"px";
+				document.getElementById('screen_container').style.marginTop=mt+"px";
+			}
+			else{
+				document.getElementById('screen_container').style.marginLeft="0px";
+				document.getElementById('screen_container').style.marginTop="0px";
+			}
+		}
+		
         emulator.add_listener("emulator-started", function()
         {
             last_tick = Date.now();
@@ -508,7 +552,7 @@
             emulator.restart();
         });
 
-        add_image_download_button(settings.hda, "hda");
+        /*add_image_download_button(settings.hda, "hda");
         add_image_download_button(settings.hdb, "hdb");
         add_image_download_button(settings.fda, "fda");
         add_image_download_button(settings.fdb, "fdb");
@@ -551,9 +595,8 @@
 
                 elem.blur();
             };
-        }
-        $("save_state").onclick = function()
-        {
+        }*/
+        electron.ipcRenderer.on('save-state',function(){
             emulator.save_state(function(error, result)
             {
                 if(error)
@@ -563,18 +606,14 @@
                 }
                 else
                 {
-                    dump_file(result, "v86state.bin");
+                    dump_file(result, "windows31_state.bin");
                 }
             });
+        });
 
-            $("save_state").blur();
-        };
-
-        $("load_state").onclick = function()
-        {
+        electron.ipcRenderer.on('load-state',function(){
             $("load_state_input").click();
-            $("load_state").blur();
-        };
+        });
 
         $("load_state_input").onchange = function()
         {
@@ -616,8 +655,7 @@
             this.value = "";
         };
 
-        $("ctrlaltdel").onclick = function()
-        {
+        electron.ipcRenderer.on('ctrlaltdel',function(){
             emulator.keyboard_send_scancodes([
                 0x1D, // ctrl
                 0x38, // alt
@@ -628,29 +666,29 @@
                 0x38 | 0x80,
                 0x53 | 0x80,
             ]);
+        });
+		
+		electron.ipcRenderer.on('esc',function(){
+            emulator.keyboard_send_scancodes([
+                0x01, // esc
 
-            $("ctrlaltdel").blur();
-        };
-
-        $("alttab").onclick = function()
-        {
+                // break codes
+                0x01 | 0x80,
+            ]);
+        });
+		
+		electron.ipcRenderer.on('altf4',function(){
             emulator.keyboard_send_scancodes([
                 0x38, // alt
-                0x0F, // tab
+                0x3E, // f4
+
+                // break codes
+                0x38 | 0x80,
+                0x3E | 0x80,
             ]);
+        });
 
-            setTimeout(function()
-            {
-                emulator.keyboard_send_scancodes([
-                    0x38 | 0x80,
-                    0x0F | 0x80,
-                ]);
-            }, 100);
-
-            $("alttab").blur();
-        };
-
-        $("scale").onchange = function()
+        /*$("scale").onchange = function()
         {
             var n = parseFloat(this.value);
 
@@ -658,8 +696,26 @@
             {
                 emulator.screen_set_scale(n, n);
             }
+        };*/
+        function change_scale(n)
+        {
+            if(n || n > 0)
+            {
+                emulator.screen_set_scale(n, n);
+            }
         };
-
+        electron.ipcRenderer.on('reset-scale',function(){
+          zoom_factor=1;
+          change_scale(zoom_factor);
+        });
+        electron.ipcRenderer.on('zoom-scale',function(){
+          zoom_factor+=0.25;
+          change_scale(zoom_factor);
+        });
+        electron.ipcRenderer.on('unzoom-scale',function(){
+          zoom_factor-=0.25;
+          change_scale(zoom_factor);
+        });
         $("screen_container").onclick = function()
         {
             if(mouse_is_enabled==false)mouse_is_enabled=true;
@@ -680,12 +736,15 @@
             phone_keyboard.focus();
         }, false);
 
-        $("take_screenshot").onclick = function()
-        {
-            emulator.screen_make_screenshot();
-
-            $("take_screenshot").blur();
-        };
+        electron.ipcRenderer.on('take-screenshot',function(){
+			//document.getElementById("vga").toDataURL();
+			const {clipboard}=require('electron');
+			clipboard.writeText(document.getElementById("vga").toDataURL());
+			electron.ipcRenderer.send('link-copied');
+        });
+        electron.ipcRenderer.on('take-textshot',function(){
+            dump_file(document.getElementById("screen").innerText,"textshot.txt");
+        });
 
         window.addEventListener("keydown", unlock_mouse_test, false);
         window.addEventListener("keydown", downkey, false);
@@ -728,7 +787,7 @@
                 mouse_locked=true;
               }
           }
-		  console.log(e.keyCode);
+		  //console.log(e.keyCode);
         }
         function upkey(e)
         {

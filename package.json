@@ -46,6 +46,7 @@
   "dependencies": {
     "custom-electron-titlebar": "^3.2.5",
     "electron-squirrel-startup": "^1.0.0",
+    "request": "^2.88.2",
     "url-exist": "^2.0.2"
   },
   "devDependencies": {
