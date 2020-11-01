@@ -81,7 +81,7 @@ function ScreenAdapter(screen_container, bus)
 	
 	function resizer_sc()
 	{
-		if(document.getElementById('screen_container').style.display=="block"){
+		if(document.getElementById('vga').style.display=="block"){
 			ml=innerWidth/2-document.getElementById('vga').width/2;
 			mt=innerHeight/2-document.getElementById('vga').height/2;
 			if(ml<0)ml=0;
