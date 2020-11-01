@@ -83,7 +83,7 @@ function ScreenAdapter(screen_container, bus)
 	{
 		if(document.getElementById('screen_container').style.display=="block"){
 			ml=innerWidth/2-document.getElementById('vga').width/2;
-			mt=innerHeight/2-30-document.getElementById('vga').height/2;
+			mt=innerHeight/2-document.getElementById('vga').height/2;
 			if(ml<0)ml=0;
 			if(mt<0)mt=0;
 			document.getElementById('screen_container').style.marginLeft=ml+"px";
