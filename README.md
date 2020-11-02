@@ -13,7 +13,12 @@ Download [source](https://github.com/Pixelsuft/windows31/edit/main/README.md) an
 ```
 npm install
 pip install flask
+pip install pyinstaller
 npm start
+```
+# Building server
+```
+pyinstaller server/server.py -F -i /src/icon.ico --add-data "src;src"
 ```
 # Screenshots
 ![Screenshot](https://github.com/Pixelsuft/windows31/blob/main/src/boot.png?raw=true)
