@@ -79,15 +79,19 @@ function ScreenAdapter(screen_container, bus)
 	
     var enable_screen=true;
 	
+    var zoom_factor=1;
+	
 	function resizer_sc()
 	{
 		if(document.getElementById('vga').style.display=="block"){
-			ml=innerWidth/2-document.getElementById('vga').width/2;
-			mt=innerHeight/2-30-document.getElementById('vga').height/2;
+			if(enable_screen==false){
+			ml=(innerWidth/2)-((document.getElementById('vga').width*zoom_factor)/2);
+			mt=(innerHeight/2)-30-((document.getElementById('vga').height*zoom_factor)/2);
 			if(ml<0)ml=0;
 			if(mt<0)mt=0;
 			document.getElementById('screen_container').style.marginLeft=ml+"px";
 			document.getElementById('screen_container').style.marginTop=mt+"px";
+			}
 		}
 		else{
 			if(enable_screen==true){
@@ -97,6 +101,19 @@ function ScreenAdapter(screen_container, bus)
 		}
 	}
 	window.addEventListener("resize", resizer_sc);
+	const electron=require('electron');
+	electron.ipcRenderer.on('reset-scale',function(){
+	  zoom_factor=1;
+	  resizer_sc();
+	});
+	electron.ipcRenderer.on('zoom-scale',function(){
+	  zoom_factor+=0.25;
+	  resizer_sc();
+	});
+	electron.ipcRenderer.on('unzoom-scale',function(){
+	  zoom_factor-=0.25;
+	  resizer_sc();
+	});
     /**
      * Charmaps that containt unicode sequences for the default dospage
      * @const
@@ -517,7 +534,6 @@ function ScreenAdapter(screen_container, bus)
             }
             if(text=="Starting Windows 3.1...                                                         "){
                 text="";
-                const electron=require("electron");
                 electron.ipcRenderer.send('in-started');
                 if(enable_screen==true){
                   text_screen.style.display="none";
