@@ -18,7 +18,9 @@ npm start
 ```
 # Building server
 ```
-pyinstaller server/server.py -F -i src/icon.ico --add-data "src;src"
+move server/server.py server.py
+pyinstaller server.py -F -i src/icon.ico --add-data "src;src"
+move dist/server.exe server.exe
 ```
 # Screenshots
 ![Screenshot](https://github.com/Pixelsuft/windows31/blob/main/src/boot.png?raw=true)
