@@ -1,7 +1,7 @@
 # windows31
 Windows 3.1, running in an [Electron](https://electronjs.org/) app.
 # Languages
-* English
+* English (Work in progress)
 * Russian
 # Downloads
 | Type / OS | Windows, English | Windows, Russian |
