@@ -1,5 +1,6 @@
 # windows31
-Windows 3.1, running in an [Electron](https://electronjs.org/) app.
+Windows 3.1, running in an [Electron](https://electronjs.org/) app. <br />
+![Screenshot](https://github.com/Pixelsuft/windows31/blob/main/src/boot.png)
 # Languages
 * English
 * Russian
@@ -22,7 +23,4 @@ move server/server.py server.py
 pyinstaller server.py -F -i src/icon.ico --add-data "src;src"
 move dist/server.exe server.exe
 ```
-<br />
 If don't works, move server.py to main folder from resources/app and edit it for this folder
-# Screenshots
-![Screenshot](https://github.com/Pixelsuft/windows31/blob/main/src/boot.png)
