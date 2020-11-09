@@ -25,4 +25,4 @@ move dist/server.exe server.exe
 <br />
 If don't works, move server.py to main folder from resources/app and edit it for this folder
 # Screenshots
-![Screenshot](https://github.com/Pixelsuft/windows31/blob/main/src/boot.png?raw=true)
+![Screenshot](https://github.com/Pixelsuft/windows31/blob/main/src/boot.png)
